@@ -37,17 +37,12 @@ const App = () => {
   const [grid, setGrid] = useState([]);
   const [selectedCells, setSelectedCells] = useState([]);
   const [congratulations, setCongratulations] = useState(false);
-  const [images, setImages] = useState([]);
 
+  // Fetch images from the server when the component mounts
   useEffect(() => {
-    // Fetch images from the server when the component mounts
-    axios.get('https://fruit-bingo-server-70a1e5dc0205.herokuapp.com/fruitbingoapp/GetImages')
+    axios.get('http://localhost:5038/fruitbingoapp/GetImages')
       .then((response) => {
-        // Extract fetched images and set them in the state
         const fetchedImages = response.data;
-        setImages(fetchedImages);
-
-        // Generate the grid using the fetched images and set it in the state
         const newGrid = generateGrid(fetchedImages);
         setGrid(newGrid);
       })
@@ -59,10 +54,8 @@ const App = () => {
   // Function to generate the grid with random images
   const generateGrid = (fetchedImages) => {
     return Array.from({ length: 4 }, () =>
-      Array.from({ length: 4 }, () => {
-        // Select a random image from the fetched images
+      Array from({ length: 4 }, () => {
         const randomImage = fetchedImages[Math.floor(Math.random() * fetchedImages.length)];
-        // Create an <img> element with the selected image and alt text
         return <img src={randomImage.image} alt={randomImage.alt} style={styles.image} />;
       })
     );
@@ -79,9 +72,7 @@ const App = () => {
         distinctCols.add(cell.col);
       });
 
-      // Check if all selected cells are in a single row or column
       if (distinctRows.size === 1 || distinctCols.size === 1) {
-        // Get the alt values of the selected cells and check if they are all 'apple'
         const altValues = cells.map((cell) => grid[cell.row][cell.col].props.alt.toLowerCase());
         if (altValues.every((alt) => alt === 'apple')) {
           return true;
@@ -100,12 +91,10 @@ const App = () => {
     );
 
     if (cellIndex !== -1) {
-      // Cell is already selected, unselect it
       const newSelectedCells = [...selectedCells];
       newSelectedCells.splice(cellIndex, 1);
       setSelectedCells(newSelectedCells);
     } else {
-      // Cell is not selected, select it
       setSelectedCells((prevSelectedCells) => [...prevSelectedCells, cell]);
     }
   };
@@ -113,7 +102,7 @@ const App = () => {
   useEffect(() => {
     // Check for congratulations whenever the selected cells change
     setCongratulations(checkForCongratulations(selectedCells));
-  }, [selectedCells]);
+  }, [selectedCells, checkForCongratulations]);
 
   return (
     <div style={styles.container}>
