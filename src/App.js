@@ -54,7 +54,7 @@ const App = () => {
   // Function to generate the grid with random images
   const generateGrid = (fetchedImages) => {
     return Array.from({ length: 4 }, () =>
-      Array from({ length: 4 }, () => {
+      Array.from({ length: 4 }, () => {
         const randomImage = fetchedImages[Math.floor(Math.random() * fetchedImages.length)];
         return <img src={randomImage.image} alt={randomImage.alt} style={styles.image} />;
       })
